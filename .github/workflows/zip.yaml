@@ -17,7 +17,7 @@ jobs:
 
     - name: Zip src folder
       run: |
-        echo "Creating new src.zip from src folder... 🔒"
+        echo "Creating new src.zip from src foldeasdr... 🔒"
         mkdir -p build
         zip -r -X build/src.zip src
         echo "Zip created 🚀"
