@@ -40,4 +40,4 @@ jobs:
         title: "chore(ci): generate zip bundle"
         body: "Generated new src.zip"
         branch: "branch-${{ github.sha }}"
-        base: "master"
+        base: "main"
