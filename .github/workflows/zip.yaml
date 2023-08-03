@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -17,15 +17,27 @@ jobs:
 
     - name: Zip src folder
       run: |
-        echo "Creating new src.zip from src folddr... 🔒"
+        echo "Creating new src.zip from src folder... 🔒"
         mkdir -p build
         zip -r -X build/src.zip src
         echo "Zip created 🚀"
 
-    - name: Commit and push
+    - name: Create new branch and commit
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+
+        # Create new branch
+        git checkout -b branch-${{ github.sha }}
+
         git add build/src.zip
-        git commit -m "chore: automatically zipped src folder and added to build directory"
-        git push
+        git commit -m "chore(ci): generate zip bundle"
+        git push origin branch-${{ github.sha }}
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        title: "chore(ci): generate zip bundle"
+        body: "Generated new src.zip"
+        branch: "branch-${{ github.sha }}"
+        base: "master"
