@@ -1,0 +1,34 @@
+name: Zip src folder and add to repo
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+
+    - name: Zip src folder
+      run: |
+        echo "Creating new src.zip from src folder... 🔒"
+        mkdir -p build
+        zip -r -X build/src.zip src
+        echo "Zip created 🚀"
+
+    - name: Commit and push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add build/src.zip
+        git commit -m "chore: automatically zipped src folder and added to build directory"
+        git push
